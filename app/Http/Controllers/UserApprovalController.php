@@ -38,7 +38,7 @@ class UserApprovalController extends Controller
         $user = User::findOrFail($userChangeRequest->user_id);
 
         // Terapkan perubahan
-        $user->nma = $payload['nama'] ?? $user->nma;
+        $user->nama = $payload['nama'] ?? $user->nama;
         $user->nip = $payload['nip'] ?? $user->nip;
         $user->email = $payload['email'] ?? $user->email;
         $user->username = $payload['username'] ?? $user->username;

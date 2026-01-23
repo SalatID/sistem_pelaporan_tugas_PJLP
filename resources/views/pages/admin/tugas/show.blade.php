@@ -32,11 +32,7 @@
             </div>
             <div class="col-12 col-md-6">
               <div class="text-muted">Pelapor</div>
-              <div>{{ $tugas->pengguna->nma ?? '-' }}</div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="text-muted">Dibuat Oleh</div>
-              <div>{{ $tugas->creator->nama ?? $tugas->creator->fullname ?? '-' }}</div>
+              <div>{{ $tugas->pengguna->nama ?? $tugas->pengguna->fullname ?? '-' }}</div>
             </div>
             <div class="col-12 col-md-6">
               <div class="text-muted">Status</div>

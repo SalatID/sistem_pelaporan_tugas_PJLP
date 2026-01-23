@@ -23,8 +23,8 @@
           <tbody>
             @forelse ($requests as $r)
               <tr>
-                <td>{{ $r->user->nma ?? '-' }}</td>
-                <td>{{ $r->requester->nma ?? '-' }}</td>
+                <td>{{ $r->user->nama ?? '-' }}</td>
+                <td>{{ $r->requester->nama ?? '-' }}</td>
                 <td>{{ $r->type }}</td>
                 <td><span class="badge bg-secondary">{{ $r->status }}</span></td>
                 <td>{{ optional($r->created_at)->format('d-m-Y H:i') }}</td>

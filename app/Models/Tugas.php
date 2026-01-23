@@ -38,6 +38,16 @@ class Tugas extends Model
         return $this->belongsTo(User::class, 'pengguna_id');
     }
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_user');
+    }
+
+    public function updater()
+    {
+        return $this->belongsTo(User::class, 'updated_user');
+    }
+
     /* =====================
      |  STATUS HELPERS
      ===================== */

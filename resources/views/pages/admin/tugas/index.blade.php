@@ -35,7 +35,7 @@
               <tr>
                 <td>{{ $t->nama }}</td>
                 <td>{{ $t->kategori->nama ?? '-' }}</td>
-                <td>{{ $t->pengguna->nma ?? '-' }}</td>
+                <td>{{ $t->pengguna->nama ?? $t->pengguna->fullname ?? '-' }}</td>
                 <td><span class="badge bg-secondary">{{ $t->status }}</span></td>
                 <td>{{ optional($t->updated_at)->format('d-m-Y H:i') }}</td>
                 <td class="text-end">

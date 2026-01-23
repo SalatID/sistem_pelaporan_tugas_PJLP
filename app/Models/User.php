@@ -97,4 +97,13 @@ class User extends Authenticatable
     {
         return $this->jabatan?->nama === 'Petugas';
     }
+
+    /* =====================
+     |  ACCESSORS
+     ===================== */
+
+    public function getDisplayNameAttribute(): string
+    {
+        return $this->nama ?? $this->fullname ?? $this->username ?? $this->email;
+    }
 }
