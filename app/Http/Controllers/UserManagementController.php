@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Jabatan;
+use App\Models\Lokasi;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
@@ -17,8 +19,10 @@ class UserManagementController extends Controller
     {
         $users = User::all();
         $roles = Role::all();
+        $jabatans = Jabatan::all();
+        $lokasis = Lokasi::all();
         // dd($users);
-        return view('pages.admin.user_management.user.list',compact('users','roles'));
+        return view('pages.admin.user_management.user.list',compact('users','roles','jabatans','lokasis'));
     }
     public function create()
     {
@@ -30,8 +34,15 @@ class UserManagementController extends Controller
             'fullname'=>['required'],
             'role'=>['required'],
             'email' => ['required', 'email','unique:users,email'],
+            'nip' => ['nullable', 'string', 'max:255'],
+            'jabatan_id' => ['nullable', 'uuid', 'exists:jabatan,id'],
+            'lokasi_id' => ['nullable', 'uuid', 'exists:lokasi,id'],
         ]);
-        $users = User::create($credentials);
+        
+        // Auto-generate username from email (part before @)
+        $credentials['username'] = explode('@', $credentials['email'])[0];
+        
+        $user = User::create($credentials);
         if($user){
             $role = Role::where(['name' =>  $user->role])->first();
             $user->assignRole([$role->id]);
@@ -59,7 +70,7 @@ class UserManagementController extends Controller
         try{
             $decrypted = Crypt::decryptString($id);
             $params = array_filter(request()->all(),function($key){
-                return in_array($key,["fullname","email","role"])!==false;
+                return in_array($key,["fullname","email","role","nip","jabatan_id","lokasi_id"])!==false;
             },ARRAY_FILTER_USE_KEY);
             // $params['updated_user']=auth()->user()->id;
             $users = User::find($decrypted);

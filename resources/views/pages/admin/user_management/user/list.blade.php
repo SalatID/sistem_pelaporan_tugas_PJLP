@@ -22,6 +22,9 @@
                     <th class="text-center">Full Name</th>
                     <th class="text-center">Email</th>
                     <th class="text-center">Role</th>
+                    <th class="text-center">NIP</th>
+                    <th class="text-center">Jabatan</th>
+                    <th class="text-center">Lokasi</th>
                     <th class="text-center">Email Verified Date</th>
                     <th class="text-center">Created Date</th>
                     <th class="text-center">Action</th>
@@ -35,6 +38,9 @@
                     <td class="text-center">{{$item->fullname}}</td>
                     <td class="text-center">{{$item->email}}</td>
                     <td class="text-center">{{$item->role}}</td>
+                    <td class="text-center">{{$item->nip ?? '-'}}</td>
+                    <td class="text-center">{{$item->jabatan->nama ?? '-'}}</td>
+                    <td class="text-center">{{$item->lokasi->nama ?? '-'}}</td>
                     <td class="text-center">{{$item->email_verified_at}}</td>
                     <td class="text-center">{{$item->created_at}}</td>
                     <td class="text-center">
@@ -93,6 +99,37 @@
                     @endif
                     {{-- <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span> --}}
                 </div>
+                <div class="form-group">
+                    <label for="nip">NIP</label>
+                    <input class="form-control {{ $errors->has('nip') ? 'is-invalid' : '' }}" type="text" name="nip" id="nip" placeholder="NIP">
+                    @if($errors->has('nip'))
+                        <span class="text-danger">{{ $errors->first('nip') }}</span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <label for="jabatan_id">Jabatan</label>
+                    <select class="form-control {{ $errors->has('jabatan_id') ? 'is-invalid' : '' }}" name="jabatan_id" id="jabatan_id">
+                        <option value="">Choose Jabatan</option>
+                        @foreach($jabatans as  $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('jabatan_id'))
+                        <span class="text-danger">{{ $errors->first('jabatan_id') }}</span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <label for="lokasi_id">Lokasi</label>
+                    <select class="form-control {{ $errors->has('lokasi_id') ? 'is-invalid' : '' }}" name="lokasi_id" id="lokasi_id">
+                        <option value="">Choose Lokasi</option>
+                        @foreach($lokasis as  $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('lokasi_id'))
+                        <span class="text-danger">{{ $errors->first('lokasi_id') }}</span>
+                    @endif
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -146,6 +183,37 @@
                     @endif
                     {{-- <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span> --}}
                 </div>
+                <div class="form-group">
+                    <label for="nip">NIP</label>
+                    <input class="form-control {{ $errors->has('nip') ? 'is-invalid' : '' }}" type="text" name="nip" id="nip_edit" placeholder="NIP">
+                    @if($errors->has('nip'))
+                        <span class="text-danger">{{ $errors->first('nip') }}</span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <label for="jabatan_id">Jabatan</label>
+                    <select class="form-control {{ $errors->has('jabatan_id') ? 'is-invalid' : '' }}" name="jabatan_id" id="jabatan_id_edit">
+                        <option value="">Choose Jabatan</option>
+                        @foreach($jabatans as  $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('jabatan_id'))
+                        <span class="text-danger">{{ $errors->first('jabatan_id') }}</span>
+                    @endif
+                </div>
+                <div class="form-group">
+                    <label for="lokasi_id">Lokasi</label>
+                    <select class="form-control {{ $errors->has('lokasi_id') ? 'is-invalid' : '' }}" name="lokasi_id" id="lokasi_id_edit">
+                        <option value="">Choose Lokasi</option>
+                        @foreach($lokasis as  $item)
+                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        @endforeach
+                    </select>
+                    @if($errors->has('lokasi_id'))
+                        <span class="text-danger">{{ $errors->first('lokasi_id') }}</span>
+                    @endif
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -166,6 +234,9 @@
                 $('input[name="fullname"]',$('#editUserModal')).val(data.fullname)
                 $('input[name="email"]',$('#editUserModal')).val(data.email)
                 $('select[name="role"]',$('#editUserModal')).val(data.role)
+                $('#nip_edit').val(data.nip)
+                $('#jabatan_id_edit').val(data.jabatan_id)
+                $('#lokasi_id_edit').val(data.lokasi_id)
                 action = $('#editUserForm').attr('action')
                 $('#editUserForm').attr('action',action.substring(0, (action.length-1))+id)
                 $('#editUserModal').modal('show')
