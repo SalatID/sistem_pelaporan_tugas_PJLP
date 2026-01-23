@@ -100,11 +100,53 @@ class Controller extends BaseController
     {
         $menu = [
             [
-                "id"=>"2",
-                "icon"=>"fas fa-users",
-                "name"=>"User Management",
+                "id"=>"1",
+                "icon"=>"fas fa-database",
+                "name"=>"Master Data",
                 "src"=>"#",
-                "permision"=>["user_list","role_list","permision_list"],
+                "permision"=>["jabatan_list","lokasi_list","kategori_list"],
+                "children"=>[
+                    [
+                        "icon"=>"fas fa-id-badge",
+                        "name"=>"Jabatan",
+                        "permision"=>["jabatan_list"],
+                        "src"=>"jabatan.index"
+                    ],
+                    [
+                        "icon"=>"fas fa-map-marker-alt",
+                        "name"=>"Lokasi",
+                        "permision"=>["lokasi_list"],
+                        "src"=>"lokasi.index"
+                    ],
+                    [
+                        "icon"=>"fas fa-tags",
+                        "name"=>"Kategori",
+                        "permision"=>["kategori_list"],
+                        "src"=>"kategori.index"
+                    ],
+                ],
+            ],
+            [
+                "id"=>"2",
+                "icon"=>"fas fa-tasks",
+                "name"=>"Operasional",
+                "src"=>"#",
+                "permision"=>["tugas_list"],
+                "children"=>[
+                    [
+                        "icon"=>"fas fa-clipboard-list",
+                        "name"=>"Tugas/Laporan",
+                        "permision"=>["tugas_list"],
+                        "src"=>"tugas.index"
+                    ],
+                ],
+            ],
+            [
+                "id"=>"3",
+                "icon"=>"fas fa-users",
+                "name"=>"Manajemen User",
+                "src"=>"#",
+                "permision"=>["user_list","role_list","permission_list"],
                 "children"=>[
                     [
                         "icon"=>"fas fa-user",
@@ -150,5 +192,18 @@ class Controller extends BaseController
                 break;
             }
             return $color;
+    }
+    public function ensurePengawas(): void
+    {
+        $user = auth()->user();
+        if ($user->hasRole('super-admin')) return;
+        if (!$user->isPengawas()) abort(403);
+    }
+
+    public function ensureAdmin(): void
+    {
+        $user = auth()->user();
+        if ($user->hasRole('super-admin')) return;
+        if (!($u->isPengawas() || $u->isKordinator())) abort(403);
     }
 }

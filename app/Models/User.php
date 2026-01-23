@@ -26,7 +26,15 @@ class User extends Authenticatable
         'email',
         'role',
         'password',
-        'email_verified_at'
+        'email_verified_at',
+        'nama',
+        'nip',
+        'username',
+        'jabatan_id',
+        'lokasi_id',
+        // 'status',      // opsional: APPROVED / PENDING
+        'created_user',
+        'updated_user',
     ];
 
     /**
@@ -47,4 +55,46 @@ class User extends Authenticatable
     // protected $casts = [
     //     'email_verified_at' => 'datetime',
     // ];
+    /* =====================
+     |  RELATIONSHIPS
+     ===================== */
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class);
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class);
+    }
+
+    public function tugas()
+    {
+        return $this->hasMany(Tugas::class, 'pengguna_id');
+    }
+
+    public function changeRequests()
+    {
+        return $this->hasMany(UserChangeRequest::class);
+    }
+
+    /* =====================
+     |  ROLE HELPERS (RBAC)
+     ===================== */
+
+    public function isPengawas(): bool
+    {
+        return $this->jabatan?->nama === 'Pengawas';
+    }
+
+    public function isKordinator(): bool
+    {
+        return $this->jabatan?->nama === 'Kordinator';
+    }
+
+    public function isPetugas(): bool
+    {
+        return $this->jabatan?->nama === 'Petugas';
+    }
 }

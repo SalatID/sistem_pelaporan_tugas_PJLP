@@ -7,8 +7,15 @@ use App\Http\Controllers\AdminCotroller;
 use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\PermisionController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PesilatController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\TugasController;
 
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserApprovalController;
+
+use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KategoriController;
+use App\Http\Controllers\LokasiController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,5 +50,26 @@ Route::group(['middleware' => ['auth']], function () {
         PUT|PATCH     /users/{user}               update  users.update
         DELETE        /users/{user}               destroy users.destroy
      */
+        Route::resource('jabatan', JabatanController::class);
+    Route::resource('kategori', KategoriController::class);
+    Route::resource('lokasi', LokasiController::class);
     
+    Route::get('approvals/users', [UserApprovalController::class, 'index'])
+        ->name('approvals.users.index');
+
+    Route::post('approvals/users/{userChangeRequest}/approve', [UserApprovalController::class, 'approve'])
+        ->name('approvals.users.approve');
+
+    Route::post('approvals/users/{userChangeRequest}/reject', [UserApprovalController::class, 'reject'])
+        ->name('approvals.users.reject');
+
+
+        
+    Route::resource('tugas', TugasController::class);
+
+    // Workflow tambahan untuk Tugas
+    Route::post('tugas/{tugas}/submit',  [TugasController::class, 'submit'])->name('tugas.submit');
+    Route::post('tugas/{tugas}/approve', [TugasController::class, 'approve'])->name('tugas.approve');
+    Route::post('tugas/{tugas}/reject',  [TugasController::class, 'reject'])->name('tugas.reject');
+
 });
