@@ -79,7 +79,7 @@
             <a href="index3.html" class="brand-link">
                 {{-- <img src="{{ asset('assets') }}/dist/img/logo.png" alt="SIP Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
-                <span class="brand-text font-weight-light">SIP</span>
+                <span class="brand-text font-weight-light">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', config('app.name')))) }}</span>
             </a>
 
             <!-- Sidebar -->
