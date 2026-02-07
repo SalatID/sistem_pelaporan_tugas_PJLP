@@ -6,6 +6,7 @@
       </div>
       <div class="info">
         <a href="#" class="d-block">{{auth()->user()->fullname}}</a>
+        <small class="text-white">{{auth()->user()->role}}</small>
       </div>
     </div>
 

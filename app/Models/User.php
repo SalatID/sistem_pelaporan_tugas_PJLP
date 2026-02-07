@@ -95,7 +95,7 @@ class User extends Authenticatable
 
     public function isPetugas(): bool
     {
-        return $this->jabatan?->nama === 'Petugas';
+        return $this->jabatan?->nama === 'Perawat';
     }
 
     /* =====================

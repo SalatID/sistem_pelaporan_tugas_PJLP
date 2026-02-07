@@ -63,7 +63,7 @@ class TugasController extends Controller
             'pengguna_id' => $user->id,
             'deskripsi' => $data['deskripsi'] ?? null,
             'foto' => $path,
-            'status' => '1', // default draft
+            'status' => 'pending', // default draft
             'created_user' => $user->id,
             'updated_user' => $user->id,
         ]);
@@ -140,68 +140,24 @@ class TugasController extends Controller
 
     // ========== Workflow Status ==========
 
-    public function submit(Request $request, Tugas $tuga)
+    public function approve($id)
     {
-        $tugas = $tuga;
-        $user = $request->user();
-
-        // hanya pemilik yang boleh submit
-        if ($tugas->pengguna_id !== $user->id) {
-            abort(403, 'Tidak berwenang submit tugas ini.');
-        }
-
-        // hanya boleh dari DRAFT/REJECTED -> PENDING
-        if (!in_array($tugas->status, ['DRAFT', 'REJECTED'], true)) {
-            abort(422, 'Status tugas tidak dapat disubmit.');
-        }
-
-        $tugas->status = 'PENDING';
-        $tugas->updated_user = $user->id;
-        $tugas->save();
-
-        return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas berhasil disubmit (Pending).');
-    }
-
-    public function approve(Request $request, Tugas $tuga)
-    {
-        $tugas = $tuga;
-        $user = $request->user();
-
+        $user = auth()->user();
+        $tugas = Tugas::findOrFail($id);
         // Pengawas boleh approve; Kordinator opsional (silakan atur)
         if (!$user->isPengawas()) {
             abort(403, 'Hanya Pengawas yang dapat approve.');
         }
 
-        if ($tugas->status !== 'PENDING') {
+        if ($tugas->status !== 'pending') {
             abort(422, 'Hanya tugas Pending yang dapat di-approve.');
         }
 
-        $tugas->status = 'APPROVED';
+        $tugas->status = 'approved';
         $tugas->updated_user = $user->id;
         $tugas->save();
 
         return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas di-approve.');
-    }
-
-    public function reject(Request $request, Tugas $tuga)
-    {
-        $tugas = $tuga;
-        $user = $request->user();
-
-        if (!$user->isPengawas()) {
-            abort(403, 'Hanya Pengawas yang dapat reject.');
-        }
-
-        if ($tugas->status !== 'PENDING') {
-            abort(422, 'Hanya tugas Pending yang dapat di-reject.');
-        }
-
-        // jika butuh alasan reject, tambah kolom alasan_reject di tabel tugas
-        $tugas->status = 'REJECTED';
-        $tugas->updated_user = $user->id;
-        $tugas->save();
-
-        return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas di-reject.');
     }
 
     // ========== Authorization Helpers ==========

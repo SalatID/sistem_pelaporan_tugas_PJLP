@@ -8,9 +8,11 @@
 @endsection
 @section('content')
 <div class="container-fluid">
+  @can('tugas_create')
   <div class="mb-3 text-end">
     <a class="btn btn-primary" href="{{ route('tugas.create') }}">Tambah Tugas</a>
   </div>
+  @endcan
 
   @if (session('success'))
     <div class="alert alert-success">{{ session('success') }}</div>
@@ -36,16 +38,27 @@
                 <td>{{ $t->nama }}</td>
                 <td>{{ $t->kategori->nama ?? '-' }}</td>
                 <td>{{ $t->pengguna->nama ?? $t->pengguna->fullname ?? '-' }}</td>
-                <td><span class="badge bg-secondary">{{ $t->status }}</span></td>
+                <td><span class="badge {{ $t->status == 'approved' ? 'bg-success' : 'bg-secondary' }}">{{ $t->status }}</span></td>
                 <td>{{ optional($t->updated_at)->format('d-m-Y H:i') }}</td>
                 <td class="text-end">
                   <a class="btn btn-sm btn-outline-secondary" href="{{ route('tugas.show', $t->id) }}">Detail</a>
+                  @can('tugas_edit')
+                   @if($t->status == 'pending')
                   <a class="btn btn-sm btn-outline-primary" href="{{ route('tugas.edit', $t->id) }}">Edit</a>
+                  @endif
+                  @endcan
+                  @can('tugas_approve')
+                  @if($t->status == 'pending')
+                  <a class="btn btn-sm btn-outline-success" href="{{ route('tugas.approve', $t->id) }}">Approve</a>
+                  @endif
+                  @endcan
+                  @can('tugas_delete')
                   <form class="d-inline" method="POST" action="{{ route('tugas.destroy', $t->id) }}" onsubmit="return confirm('Hapus tugas ini?')">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-sm btn-outline-danger" type="submit">Hapus</button>
                   </form>
+                  @endcan
                 </td>
               </tr>
             @empty

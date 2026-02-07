@@ -26,9 +26,16 @@
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
-                    <input type="password" name="password"
-                        class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="Password"
-                        aria-describedby="inputPassword-error" aria-invalid="true">
+                    <div class="input-group">
+                        <input type="password" id="password" name="password"
+                            class="form-control {{ $errors->has('password') ? 'is-invalid' : '' }}" placeholder="Password"
+                            aria-describedby="inputPassword-error" aria-invalid="true">
+                        <div class="input-group-append">
+                            <span class="input-group-text cursor-pointer" onclick="togglePassword('password')">
+                                <i class="fas fa-eye" id="password-icon"></i>
+                            </span>
+                        </div>
+                    </div>
                     @if ($errors->has('password'))
                         <span id="inputPassword-error"
                             class="error invalid-feedback">{{ $errors->first('password') }}</span>
@@ -50,6 +57,23 @@
                     <!-- /.col -->
                 </div>
             </form>
+
+            <script>
+                function togglePassword(fieldId) {
+                    const passwordField = document.getElementById(fieldId);
+                    const icon = document.getElementById(fieldId + '-icon');
+                    
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        passwordField.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                }
+            </script>
 
             {{-- <div class="social-auth-links text-center mb-3">
         <p>- OR -</p>

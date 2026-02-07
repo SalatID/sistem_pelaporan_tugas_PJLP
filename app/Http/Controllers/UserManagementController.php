@@ -35,7 +35,6 @@ class UserManagementController extends Controller
             'role'=>['required'],
             'email' => ['required', 'email','unique:users,email'],
             'nip' => ['nullable', 'string', 'max:255'],
-            'jabatan_id' => ['nullable', 'uuid', 'exists:jabatan,id'],
             'lokasi_id' => ['nullable', 'uuid', 'exists:lokasi,id'],
         ]);
         
@@ -104,19 +103,19 @@ class UserManagementController extends Controller
                     'error'=>true,
                     'message' => 'Link Expired, Please Contact Administrator',
                 ]);
-            }
-            if(User::where(['email'=>$decrypted->email])->exists()){
+                }
+                if(User::where(['email'=>$decrypted->email])->exists()){
                 $email = Crypt::encrypt($decrypted->email);
                 $from = Crypt::encrypt($decrypted->from);
                 switch ($decrypted->from) {
                     case 'mail.register':
                         $title = "Create Password";
-                    break;
-                    case 'mail.forgot_password':
-                        $title = "Forgot Password";
-                    break;
-                    default:
-                    $title = "Create Password";
+                        break;
+                        case 'mail.forgot_password':
+                            $title = "Forgot Password";
+                        break;
+                        default:
+                        $title = "Create Password";
                 }
                 return view('auth.new_password',compact('email','from','title'));
             }

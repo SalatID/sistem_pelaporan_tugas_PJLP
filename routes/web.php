@@ -16,6 +16,7 @@ use App\Http\Controllers\UserApprovalController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\AlatController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,6 +32,7 @@ Route::get('/', [WebController::class, 'index']);
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'procLogin'])->name('proc.login');
 Route::post('/register/newpassword', [UserManagementController::class, 'newPassword'])->name('newpassword');
+Route::get('/register/validate/{token}', [UserManagementController::class, 'emailValidation'])->name('email.validation');
 Route::post('/forgot/password', [UserManagementController::class, 'procForgotPassword'])->name('proc.forgot.password');
 Route::get('/forgot/password', [UserManagementController::class, 'forgotPassword'])->name('forgot.password');
 
@@ -53,6 +55,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::resource('jabatan', JabatanController::class);
     Route::resource('kategori', KategoriController::class);
     Route::resource('lokasi', LokasiController::class);
+    Route::resource('alat', AlatController::class);
     
     Route::get('approvals/users', [UserApprovalController::class, 'index'])
         ->name('approvals.users.index');
@@ -68,8 +71,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::resource('tugas', TugasController::class);
 
     // Workflow tambahan untuk Tugas
-    Route::post('tugas/{tugas}/submit',  [TugasController::class, 'submit'])->name('tugas.submit');
-    Route::post('tugas/{tugas}/approve', [TugasController::class, 'approve'])->name('tugas.approve');
-    Route::post('tugas/{tugas}/reject',  [TugasController::class, 'reject'])->name('tugas.reject');
+    Route::get('tugas/{tugas}/approve', [TugasController::class, 'approve'])->name('tugas.approve');
 
 });

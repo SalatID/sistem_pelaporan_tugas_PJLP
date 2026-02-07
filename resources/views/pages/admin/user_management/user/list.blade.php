@@ -21,7 +21,7 @@
                     <th class="text-center">#</th>
                     <th class="text-center">Full Name</th>
                     <th class="text-center">Email</th>
-                    <th class="text-center">Role</th>
+                    <th class="text-center">Jabatan</th>
                     <th class="text-center">NIP</th>
                     <th class="text-center">Jabatan</th>
                     <th class="text-center">Lokasi</th>
@@ -87,9 +87,9 @@
                     {{-- <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span> --}}
                 </div>
                 <div class="form-group">
-                    <label class="required" for="role">Role</label>
+                    <label class="required" for="role">Jabatan</label>
                     <select class="form-control {{ $errors->has('role') ? 'is-invalid' : '' }}" name="role" id="role" required>
-                        <option value="">Choose Role</option>
+                        <option value="">Choose Jabatan</option>
                         @foreach($roles as  $item)
                             <option value="{{ $item->name }}">{{ $item->name }}</option>
                         @endforeach
@@ -104,18 +104,6 @@
                     <input class="form-control {{ $errors->has('nip') ? 'is-invalid' : '' }}" type="text" name="nip" id="nip" placeholder="NIP">
                     @if($errors->has('nip'))
                         <span class="text-danger">{{ $errors->first('nip') }}</span>
-                    @endif
-                </div>
-                <div class="form-group">
-                    <label for="jabatan_id">Jabatan</label>
-                    <select class="form-control {{ $errors->has('jabatan_id') ? 'is-invalid' : '' }}" name="jabatan_id" id="jabatan_id">
-                        <option value="">Choose Jabatan</option>
-                        @foreach($jabatans as  $item)
-                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                        @endforeach
-                    </select>
-                    @if($errors->has('jabatan_id'))
-                        <span class="text-danger">{{ $errors->first('jabatan_id') }}</span>
                     @endif
                 </div>
                 <div class="form-group">
@@ -171,9 +159,9 @@
                     {{-- <span class="help-block">{{ trans('cruds.role.fields.title_helper') }}</span> --}}
                 </div>
                 <div class="form-group">
-                    <label class="required" for="role">Role</label>
+                    <label class="required" for="role">Jabatan</label>
                     <select class="form-control {{ $errors->has('role') ? 'is-invalid' : '' }}" name="role" id="role" required>
-                        <option value="">Choose Role</option>
+                        <option value="">Choose Jabatan</option>
                         @foreach($roles as  $item)
                             <option value="{{ $item->name }}">{{ $item->name }}</option>
                         @endforeach
@@ -188,18 +176,6 @@
                     <input class="form-control {{ $errors->has('nip') ? 'is-invalid' : '' }}" type="text" name="nip" id="nip_edit" placeholder="NIP">
                     @if($errors->has('nip'))
                         <span class="text-danger">{{ $errors->first('nip') }}</span>
-                    @endif
-                </div>
-                <div class="form-group">
-                    <label for="jabatan_id">Jabatan</label>
-                    <select class="form-control {{ $errors->has('jabatan_id') ? 'is-invalid' : '' }}" name="jabatan_id" id="jabatan_id_edit">
-                        <option value="">Choose Jabatan</option>
-                        @foreach($jabatans as  $item)
-                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
-                        @endforeach
-                    </select>
-                    @if($errors->has('jabatan_id'))
-                        <span class="text-danger">{{ $errors->first('jabatan_id') }}</span>
                     @endif
                 </div>
                 <div class="form-group">
