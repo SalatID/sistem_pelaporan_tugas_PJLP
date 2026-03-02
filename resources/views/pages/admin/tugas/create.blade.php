@@ -46,13 +46,26 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Foto Bukti (opsional)</label>
-          <input type="file" name="foto" class="form-control" accept="image/*">
+          <label class="form-label">Foto Sebelum Pengerjaan</label>
+          <input type="file" required name="foto_sebelum" class="form-control" accept="image/*">
+          <small class="text-muted">Foto kondisi sebelum pekerjaan dimulai</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Foto Saat Pengerjaan</label>
+          <input type="file" required name="foto_pengerjaan" class="form-control" accept="image/*">
+          <small class="text-muted">Foto dokumentasi saat pekerjaan berlangsung</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Foto Setelah Pengerjaan</label>
+          <input type="file" required name="foto_sesudah" class="form-control" accept="image/*">
+          <small class="text-muted">Foto kondisi setelah pekerjaan selesai</small>
         </div>
       </div>
 
       <div class="card-footer d-flex gap-2">
-        <button class="btn btn-primary" type="submit">Simpan (Draft)</button>
+        <button class="btn btn-primary" type="submit">Simpan</button>
         <a class="btn btn-outline-secondary" href="{{ route('tugas.index') }}">Batal</a>
       </div>
     </div>

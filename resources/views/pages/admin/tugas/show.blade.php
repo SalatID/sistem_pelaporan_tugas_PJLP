@@ -53,14 +53,48 @@
           <div class="text-muted mb-2">Deskripsi</div>
           <div style="white-space: pre-wrap;">{{ $tugas->deskripsi ?: '-' }}</div>
         </div>
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <div class="text-muted mb-2">Foto Sebelum</div>
+            @if ($tugas->foto_sebelum)
+              <img src="{{ asset('storage/' . $tugas->foto_sebelum) }}" alt="Foto Sebelum" class="img-fluid mb-2" style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+              <div>
+                <a href="{{ asset('storage/' . $tugas->foto_sebelum) }}" download class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-download"></i> Download
+                </a>
+              </div>
+            @else
+              <div class="text-muted">Tidak ada foto.</div>
+            @endif
+          </div>
 
-        <div class="col-12 col-md-4">
-          <div class="text-muted mb-2">Foto Bukti</div>
-          @if ($tugas->foto)
-            <img src="{{ asset('storage/' . $tugas->foto) }}" alt="Foto" class="img-fluid" style="max-width: 70%; max-height: 70%; border-radius: 10px;">
-          @else
-            <div class="text-muted">Tidak ada foto.</div>
-          @endif
+          <div class="col-12 col-md-4">
+            <div class="text-muted mb-2">Foto Pengerjaan</div>
+            @if ($tugas->foto_pengerjaan)
+              <img src="{{ asset('storage/' . $tugas->foto_pengerjaan) }}" alt="Foto Pengerjaan" class="img-fluid mb-2" style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+              <div>
+                <a href="{{ asset('storage/' . $tugas->foto_pengerjaan) }}" download class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-download"></i> Download
+                </a>
+              </div>
+            @else
+              <div class="text-muted">Tidak ada foto.</div>
+            @endif
+          </div>
+
+          <div class="col-12 col-md-4">
+            <div class="text-muted mb-2">Foto Sesudah</div>
+            @if ($tugas->foto_sesudah)
+              <img src="{{ asset('storage/' . $tugas->foto_sesudah) }}" alt="Foto Sesudah" class="img-fluid mb-2" style="width: 100%; height: 250px; object-fit: cover; border-radius: 10px;">
+              <div>
+                <a href="{{ asset('storage/' . $tugas->foto_sesudah) }}" download class="btn btn-sm btn-outline-primary">
+                  <i class="bi bi-download"></i> Download
+                </a>
+              </div>
+            @else
+              <div class="text-muted">Tidak ada foto.</div>
+            @endif
+          </div>
         </div>
       </div>
     </div>

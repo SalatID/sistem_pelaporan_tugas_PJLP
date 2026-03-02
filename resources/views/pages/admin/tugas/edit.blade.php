@@ -46,12 +46,37 @@
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Foto Bukti (opsional)</label>
-          <input type="file" name="foto" class="form-control" accept="image/*">
-          @if ($tugas->foto)
+          <label class="form-label">Foto Sebelum Pengerjaan (opsional)</label>
+          <input type="file" name="foto_sebelum" class="form-control" accept="image/*">
+          <small class="text-muted">Foto kondisi sebelum pekerjaan dimulai</small>
+          @if ($tugas->foto_sebelum)
             <div class="mt-2">
               <div class="text-muted mb-1">Foto saat ini:</div>
-              <img src="{{ asset('storage/' . $tugas->foto) }}" alt="Foto" style="max-width: 260px; border-radius: 8px;">
+              <img src="{{ asset('storage/' . $tugas->foto_sebelum) }}" alt="Foto Sebelum" style="max-width: 260px; border-radius: 8px;">
+            </div>
+          @endif
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Foto Saat Pengerjaan (opsional)</label>
+          <input type="file" name="foto_pengerjaan" class="form-control" accept="image/*">
+          <small class="text-muted">Foto dokumentasi saat pekerjaan berlangsung</small>
+          @if ($tugas->foto_pengerjaan)
+            <div class="mt-2">
+              <div class="text-muted mb-1">Foto saat ini:</div>
+              <img src="{{ asset('storage/' . $tugas->foto_pengerjaan) }}" alt="Foto Pengerjaan" style="max-width: 260px; border-radius: 8px;">
+            </div>
+          @endif
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Foto Setelah Pengerjaan (opsional)</label>
+          <input type="file" name="foto_sesudah" class="form-control" accept="image/*">
+          <small class="text-muted">Foto kondisi setelah pekerjaan selesai</small>
+          @if ($tugas->foto_sesudah)
+            <div class="mt-2">
+              <div class="text-muted mb-1">Foto saat ini:</div>
+              <img src="{{ asset('storage/' . $tugas->foto_sesudah) }}" alt="Foto Sesudah" style="max-width: 260px; border-radius: 8px;">
             </div>
           @endif
         </div>

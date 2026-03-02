@@ -49,12 +49,25 @@ class TugasController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'kategori_id' => ['required', 'uuid', Rule::exists('kategori', 'id')],
             'deskripsi' => ['nullable', 'string'],
-            'foto' => ['nullable', 'image', 'max:2048'],
+            'foto_sebelum' => ['nullable', 'image', 'max:2048'],
+            'foto_pengerjaan' => ['nullable', 'image', 'max:2048'],
+            'foto_sesudah' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        $path = null;
-        if ($request->hasFile('foto')) {
-            $path = $request->file('foto')->store('tugas', 'public');
+        $foto_sebelum = null;
+        $foto_pengerjaan = null;
+        $foto_sesudah = null;
+
+        if ($request->hasFile('foto_sebelum')) {
+            $foto_sebelum = $request->file('foto_sebelum')->store('tugas', 'public');
+        }
+
+        if ($request->hasFile('foto_pengerjaan')) {
+            $foto_pengerjaan = $request->file('foto_pengerjaan')->store('tugas', 'public');
+        }
+
+        if ($request->hasFile('foto_sesudah')) {
+            $foto_sesudah = $request->file('foto_sesudah')->store('tugas', 'public');
         }
 
         $tugas = Tugas::create([
@@ -62,7 +75,9 @@ class TugasController extends Controller
             'kategori_id' => $data['kategori_id'],
             'pengguna_id' => $user->id,
             'deskripsi' => $data['deskripsi'] ?? null,
-            'foto' => $path,
+            'foto_sebelum' => $foto_sebelum,
+            'foto_pengerjaan' => $foto_pengerjaan,
+            'foto_sesudah' => $foto_sesudah,
             'status' => 'pending', // default draft
             'created_user' => $user->id,
             'updated_user' => $user->id,
@@ -103,14 +118,33 @@ class TugasController extends Controller
             'nama' => ['required', 'string', 'max:255'],
             'kategori_id' => ['required', 'uuid', Rule::exists('kategori', 'id')],
             'deskripsi' => ['nullable', 'string'],
-            'foto' => ['nullable', 'image', 'max:2048'],
+            'foto_sebelum' => ['nullable', 'image', 'max:2048'],
+            'foto_pengerjaan' => ['nullable', 'image', 'max:2048'],
+            'foto_sesudah' => ['nullable', 'image', 'max:2048'],
         ]);
 
-        if ($request->hasFile('foto')) {
-            if ($tugas->foto) {
-                Storage::disk('public')->delete($tugas->foto);
+        // Handle foto_sebelum
+        if ($request->hasFile('foto_sebelum')) {
+            if ($tugas->foto_sebelum) {
+                Storage::disk('public')->delete($tugas->foto_sebelum);
             }
-            $tugas->foto = $request->file('foto')->store('tugas', 'public');
+            $tugas->foto_sebelum = $request->file('foto_sebelum')->store('tugas', 'public');
+        }
+
+        // Handle foto_pengerjaan
+        if ($request->hasFile('foto_pengerjaan')) {
+            if ($tugas->foto_pengerjaan) {
+                Storage::disk('public')->delete($tugas->foto_pengerjaan);
+            }
+            $tugas->foto_pengerjaan = $request->file('foto_pengerjaan')->store('tugas', 'public');
+        }
+
+        // Handle foto_sesudah
+        if ($request->hasFile('foto_sesudah')) {
+            if ($tugas->foto_sesudah) {
+                Storage::disk('public')->delete($tugas->foto_sesudah);
+            }
+            $tugas->foto_sesudah = $request->file('foto_sesudah')->store('tugas', 'public');
         }
 
         $tugas->fill([
@@ -130,9 +164,16 @@ class TugasController extends Controller
 
         $this->authorizeDelete($user, $tugas);
 
-        if ($tugas->foto) {
-            Storage::disk('public')->delete($tugas->foto);
+        if ($tugas->foto_sebelum) {
+            Storage::disk('public')->delete($tugas->foto_sebelum);
         }
+        if ($tugas->foto_pengerjaan) {
+            Storage::disk('public')->delete($tugas->foto_pengerjaan);
+        }
+        if ($tugas->foto_sesudah) {
+            Storage::disk('public')->delete($tugas->foto_sesudah);
+        }
+
         $tugas->delete();
 
         return redirect()->route('tugas.index')->with('success', 'Tugas berhasil dihapus.');

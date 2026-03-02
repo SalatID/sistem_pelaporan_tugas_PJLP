@@ -83,7 +83,7 @@ class User extends Authenticatable
      |  ROLE HELPERS (RBAC)
      ===================== */
 
-    public function isp(): bool
+    public function isPengawas(): bool
     {
         return auth()->user()->role=== 'pengawas';
     }

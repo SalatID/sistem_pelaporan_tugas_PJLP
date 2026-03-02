@@ -18,7 +18,9 @@ class Tugas extends Model
         'kategori_id',
         'pengguna_id',
         'deskripsi',
-        'foto',
+        'foto_sebelum',
+        'foto_pengerjaan',
+        'foto_sesudah',
         'status',        // DRAFT | PENDING | APPROVED | REJECTED
         'created_user',
         'updated_user',
