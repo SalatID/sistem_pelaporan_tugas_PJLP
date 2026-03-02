@@ -116,7 +116,6 @@
   
   if (perUserStats.length > 0) {
     const userNames = perUserStats.map(item => item.user);
-    const totalData = perUserStats.map(item => item.total);
     const approvedData = perUserStats.map(item => item.approved);
     const pendingData = perUserStats.map(item => item.pending);
     const rejectedData = perUserStats.map(item => item.rejected);
@@ -128,11 +127,6 @@
       data: {
         labels: userNames,
         datasets: [
-          {
-            label: 'Total Tugas',
-            data: totalData,
-            backgroundColor: '#dc3545'
-          },
           {
             label: 'Approved',
             data: approvedData,
