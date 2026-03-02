@@ -21,14 +21,30 @@ class AdminCotroller extends Controller
 
         $stats = [
             'total' => (clone $q)->count(),
-            'pending' => (clone $q)->where('status', 'PENDING')->count(),
-            'approved' => (clone $q)->where('status', 'APPROVED')->count(),
-            'rejected' => (clone $q)->where('status', 'REJECTED')->count(),
+            'pending' => (clone $q)->where('status', 'pending')->count(),
+            'approved' => (clone $q)->where('status', 'approved')->count(),
+            'rejected' => (clone $q)->where('status', 'rejected')->count(),
         ];
 
         $latest = (clone $q)->latest()->limit(10)->get();
 
-        return view('pages.admin.dashboard', compact('stats', 'latest'));
+        // Get per-user statistics for bar chart
+        $perUserStats = Tugas::with('pengguna:id,fullname')
+            ->get()
+            ->groupBy('pengguna_id')
+            ->map(function($tasks) {
+                return [
+                    'user' => $tasks->first()->pengguna->fullname ?? 'Unknown',
+                    'total' => $tasks->count(),
+                    'approved' => $tasks->where('status', 'approved')->count(),
+                    'pending' => $tasks->where('status', 'pending')->count(),
+                    'rejected' => $tasks->where('status', 'rejected')->count(),
+                ];
+            })
+            ->values()
+            ->take(10); // Limit to top 10 users
+
+        return view('pages.admin.dashboard', compact('stats', 'latest', 'perUserStats'));
     }
     public function index(){
 

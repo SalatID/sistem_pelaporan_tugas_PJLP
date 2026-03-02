@@ -77,9 +77,11 @@
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
             <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
-                {{-- <img src="{{ asset('assets') }}/dist/img/logo.png" alt="SIP Logo"
-                    class="brand-image img-circle elevation-3" style="opacity: .8"> --}}
-                <span class="brand-text font-weight-light">{{ implode('', array_map(fn($word) => strtoupper($word[0]), explode(' ', config('app.name')))) }}</span>
+                <img src="{{ asset('assets') }}/dist/img/logo.jpeg" alt="SIP Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8">
+                    {{-- <img src="{{ asset('assets/dist/img/logo.jpeg') }}" alt="Logo"
+                    class="brand-image img-circle elevation-3" style="opacity: .8; height: 40px;"> --}}
+                <span class="brand-text font-weight-light">&nbsp</span>
             </a>
 
             <!-- Sidebar -->
@@ -111,7 +113,7 @@
         </div>
         <!-- /.content-wrapper -->
         <footer class="main-footer">
-            <strong>Copyright &copy; 2023 <a href="#">Satria Muda Indonesia Komwil Jakarta Barat</a>.</strong>
+            <strong>Copyright &copy; 2023</strong>
             All rights reserved.
             <div class="float-right d-none d-sm-inline-block">
                 <b>Version</b> 1.1.0

@@ -17,7 +17,7 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::where("role","!=","super-admin")->get();
         $roles = Role::all();
         $jabatans = Jabatan::all();
         $lokasis = Lokasi::all();

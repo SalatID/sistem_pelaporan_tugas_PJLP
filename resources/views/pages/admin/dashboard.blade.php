@@ -53,6 +53,17 @@
     </div>
   </div>
 
+  <div class="card mb-4">
+    <div class="card-header">
+      <div class="fw-semibold">Ringkasan Tugas Per Pengguna</div>
+    </div>
+    <div class="card-body">
+      <div style="height: 400px;">
+        <canvas id="userTaskChart"></canvas>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-header d-flex align-items-center justify-content-between">
       <div class="fw-semibold">Tugas Terbaru</div>
@@ -78,7 +89,7 @@
                 <td>{{ $t->kategori->nama ?? '-' }}</td>
                 <td>{{ $t->pengguna->nma ?? '-' }}</td>
                 <td>
-                  <span class="badge bg-secondary">{{ $t->status }}</span>
+                  <span class="badge {{ $t->getStatusBadgeClass() }}">{{ $t->status }}</span>
                 </td>
                 <td>{{ optional($t->created_at)->format('d-m-Y H:i') }}</td>
                 <td class="text-end">
@@ -97,4 +108,84 @@
   </div>
 </div>
 
+@endsection
+
+@section('script')
+<script>
+  // Prepare data for chart
+  const perUserStats = @json($perUserStats);
+  
+  if (perUserStats.length > 0) {
+    const userNames = perUserStats.map(item => item.user);
+    const totalData = perUserStats.map(item => item.total);
+    const approvedData = perUserStats.map(item => item.approved);
+    const pendingData = perUserStats.map(item => item.pending);
+    const rejectedData = perUserStats.map(item => item.rejected);
+
+    var ctx = document.getElementById('userTaskChart').getContext('2d');
+
+    new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+        labels: userNames,
+        datasets: [
+          {
+            label: 'Total Tugas',
+            data: totalData,
+            backgroundColor: '#dc3545'
+          },
+          {
+            label: 'Approved',
+            data: approvedData,
+            backgroundColor: '#28a745'
+          },
+          {
+            label: 'Pending',
+            data: pendingData,
+            backgroundColor: '#ffc107'
+          },
+          {
+            label: 'Rejected',
+            data: rejectedData,
+            backgroundColor: '#007bff'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{
+            stacked: true,
+            ticks: {
+              callback: function(value) {
+                return value;
+              }
+            }
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        },
+        tooltips: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(tooltipItem, data) {
+              return data.datasets[tooltipItem.datasetIndex].label +
+                ': ' + tooltipItem.xLabel;
+            }
+          }
+        },
+        legend: {
+          position: 'top'
+        },
+        title: {
+          display: true,
+          text: 'Ringkasan Tugas Per Pengguna'
+        }
+      }
+    });
+  }
+</script>
 @endsection

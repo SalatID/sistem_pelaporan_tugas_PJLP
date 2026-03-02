@@ -201,6 +201,26 @@ class TugasController extends Controller
         return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas di-approve.');
     }
 
+    public function reject($id)
+    {
+        $user = auth()->user();
+        $tugas = Tugas::findOrFail($id);
+        // Pengawas boleh reject
+        if (!$user->isPengawas()) {
+            abort(403, 'Hanya Pengawas yang dapat reject.');
+        }
+
+        if ($tugas->status !== 'pending') {
+            abort(422, 'Hanya tugas Pending yang dapat di-reject.');
+        }
+
+        $tugas->status = 'rejected';
+        $tugas->updated_user = $user->id;
+        $tugas->save();
+
+        return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas di-reject.');
+    }
+
     // ========== Authorization Helpers ==========
 
     private function authorizeView($user, Tugas $tugas): void

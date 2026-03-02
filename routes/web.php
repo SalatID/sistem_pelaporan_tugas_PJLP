@@ -72,5 +72,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Workflow tambahan untuk Tugas
     Route::get('tugas/{tugas}/approve', [TugasController::class, 'approve'])->name('tugas.approve');
+    Route::get('tugas/{tugas}/reject', [TugasController::class, 'reject'])->name('tugas.reject');
 
 });

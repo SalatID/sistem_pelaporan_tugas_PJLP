@@ -38,7 +38,7 @@
                 <td>{{ $t->nama }}</td>
                 <td>{{ $t->kategori->nama ?? '-' }}</td>
                 <td>{{ $t->pengguna->nama ?? $t->pengguna->fullname ?? '-' }}</td>
-                <td><span class="badge {{ $t->status == 'approved' ? 'bg-success' : 'bg-secondary' }}">{{ $t->status }}</span></td>
+                <td><span class="badge {{ $t->getStatusBadgeClass() }}">{{ $t->status }}</span></td>
                 <td>{{ optional($t->updated_at)->format('d-m-Y H:i') }}</td>
                 <td class="text-end">
                   <a class="btn btn-sm btn-outline-secondary" href="{{ route('tugas.show', $t->id) }}">Detail</a>
@@ -50,14 +50,17 @@
                   @can('tugas_approve')
                   @if($t->status == 'pending')
                   <a class="btn btn-sm btn-outline-success" href="{{ route('tugas.approve', $t->id) }}">Approve</a>
+                  <a class="btn btn-sm btn-outline-warning" href="{{ route('tugas.reject', $t->id) }}">Reject</a>
                   @endif
                   @endcan
                   @can('tugas_delete')
+                   @if($t->status == 'pending')
                   <form class="d-inline" method="POST" action="{{ route('tugas.destroy', $t->id) }}" onsubmit="return confirm('Hapus tugas ini?')">
                     @csrf
                     @method('DELETE')
                     <button class="btn btn-sm btn-outline-danger" type="submit">Hapus</button>
                   </form>
+                  @endif
                   @endcan
                 </td>
               </tr>

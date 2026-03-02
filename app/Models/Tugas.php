@@ -21,7 +21,7 @@ class Tugas extends Model
         'foto_sebelum',
         'foto_pengerjaan',
         'foto_sesudah',
-        'status',        // DRAFT | PENDING | APPROVED | REJECTED
+        'status',        // DRAFT | pending | approved | rejected
         'created_user',
         'updated_user',
     ];
@@ -61,16 +61,26 @@ class Tugas extends Model
 
     public function isPending(): bool
     {
-        return $this->status === 'PENDING';
+        return $this->status === 'pending';
     }
 
     public function isApproved(): bool
     {
-        return $this->status === 'APPROVED';
+        return $this->status === 'approved';
     }
 
     public function isRejected(): bool
     {
-        return $this->status === 'REJECTED';
+        return $this->status === 'rejected';
+    }
+
+    public function getStatusBadgeClass(): string
+    {
+        return match($this->status) {
+            'rejected' => 'badge-danger',
+            'approved' => 'badge-success',
+            'pending' => 'badge-warning',
+            default => 'badge-secondary',
+        };
     }
 }
