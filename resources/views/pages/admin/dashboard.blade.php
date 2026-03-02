@@ -10,8 +10,7 @@
 {{-- CONTENT ONLY: Dashboard --}}
 <div class="container-fluid">
   <div class="d-flex align-items-center justify-content-between mb-3">
-    <h4 class="mb-0">Dashboard</h4>
-    <div class="text-muted">Hi, {{ auth()->user()->nma ?? auth()->user()->name ?? 'User' }}</div>
+    <div class="text-muted">Hi, {{ auth()->user()->nma ?? auth()->user()->fullname ?? 'User' }}</div>
   </div>
 
   @if (session('success'))
