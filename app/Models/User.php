@@ -83,19 +83,19 @@ class User extends Authenticatable
      |  ROLE HELPERS (RBAC)
      ===================== */
 
-    public function isPengawas(): bool
+    public function isp(): bool
     {
-        return $this->jabatan?->nama === 'Pengawas';
+        return auth()->user()->role=== 'pengawas';
     }
 
     public function isKordinator(): bool
     {
-        return $this->jabatan?->nama === 'Kordinator';
+        return auth()->user()->role=== 'kordinator';
     }
 
     public function isPetugas(): bool
     {
-        return $this->jabatan?->nama === 'Perawat';
+        return auth()->user()->role=== 'perawat';
     }
 
     /* =====================

@@ -23,7 +23,6 @@
                     <th class="text-center">Email</th>
                     <th class="text-center">Jabatan</th>
                     <th class="text-center">NIP</th>
-                    <th class="text-center">Jabatan</th>
                     <th class="text-center">Lokasi</th>
                     <th class="text-center">Email Verified Date</th>
                     <th class="text-center">Created Date</th>
@@ -39,12 +38,11 @@
                     <td class="text-center">{{$item->email}}</td>
                     <td class="text-center">{{$item->role}}</td>
                     <td class="text-center">{{$item->nip ?? '-'}}</td>
-                    <td class="text-center">{{$item->jabatan->nama ?? '-'}}</td>
                     <td class="text-center">{{$item->lokasi->nama ?? '-'}}</td>
                     <td class="text-center">{{$item->email_verified_at}}</td>
                     <td class="text-center">{{$item->created_at}}</td>
                     <td class="text-center">
-                       @include('partials.button_action',["permision"=>"user","target"=>"users"])
+                       @include('partials.button_action',["permision"=>"user","target"=>"users","params"=>$item->id])
                        @can("user_activation_link")
                             @if ( $item->email_verified_at==null)
                                 <a href="{{route('users.resend.activation.link',[\Illuminate\Support\Facades\Crypt::encryptString($item->id??'')])}}"><i class="fas fa-envelope text-secondary"></i></a>
