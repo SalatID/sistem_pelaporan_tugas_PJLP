@@ -14,7 +14,7 @@ class RoleController extends Controller
     }
     public function index()
     {
-        $roles = Role::with(['permissions'])->get();
+        $roles = Role::with(['permissions'])->where('name','!=','super-admin')->get();
         // dd($roles);
         return view('pages.admin.user_management.role.list',compact('roles'));
     }
