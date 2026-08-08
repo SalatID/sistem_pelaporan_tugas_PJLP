@@ -7,9 +7,19 @@ use App\Models\Kategori;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 class TugasController extends Controller
 {
+    // ambang batas hamming distance (dari 64 bit hash) untuk dianggap identik
+    private const SIMILARITY_HAMMING_THRESHOLD = 5;
+
+    private const FOTO_LABELS = [
+        'foto_sebelum' => 'Foto Sebelum',
+        'foto_pengerjaan' => 'Foto Pengerjaan',
+        'foto_sesudah' => 'Foto Sesudah',
+    ];
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -53,6 +63,10 @@ class TugasController extends Controller
             'foto_pengerjaan' => ['nullable', 'image', 'max:2048'],
             'foto_sesudah' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        $this->assertNoSimilarImage($request, 'foto_sebelum');
+        $this->assertNoSimilarImage($request, 'foto_pengerjaan');
+        $this->assertNoSimilarImage($request, 'foto_sesudah');
 
         $foto_sebelum = null;
         $foto_pengerjaan = null;
@@ -122,6 +136,10 @@ class TugasController extends Controller
             'foto_pengerjaan' => ['nullable', 'image', 'max:2048'],
             'foto_sesudah' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        $this->assertNoSimilarImage($request, 'foto_sebelum', $tugas->id);
+        $this->assertNoSimilarImage($request, 'foto_pengerjaan', $tugas->id);
+        $this->assertNoSimilarImage($request, 'foto_sesudah', $tugas->id);
 
         // Handle foto_sebelum
         if ($request->hasFile('foto_sebelum')) {
@@ -219,6 +237,116 @@ class TugasController extends Controller
         $tugas->save();
 
         return redirect()->route('tugas.show', $tugas)->with('success', 'Tugas di-reject.');
+    }
+
+    // ========== Image Similarity Helpers ==========
+
+    /**
+     * Pastikan file yang diupload pada $field tidak identik dengan foto yang
+     * sudah pernah tersimpan di kolom yang sama pada tabel tugas.
+     */
+    private function assertNoSimilarImage(Request $request, string $field, ?string $excludeId = null): void
+    {
+        if (!$request->hasFile($field)) {
+            return;
+        }
+
+        $uploadedHash = $this->getImageHash($request->file($field)->getRealPath());
+        if ($uploadedHash === null) {
+            return;
+        }
+
+        $query = Tugas::query()->whereNotNull($field);
+        if ($excludeId) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        foreach ($query->pluck($field) as $existingPath) {
+            if (!$existingPath || !Storage::disk('public')->exists($existingPath)) {
+                continue;
+            }
+
+            $existingHash = $this->getImageHash(Storage::disk('public')->path($existingPath));
+            if ($existingHash === null) {
+                continue;
+            }
+
+            if ($this->hammingDistance($uploadedHash, $existingHash) <= self::SIMILARITY_HAMMING_THRESHOLD) {
+                throw ValidationException::withMessages([
+                    $field => 'Tidak boleh menggunakan foto yang sama pada kolom ' . self::FOTO_LABELS[$field],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * Hitung average-hash (64 bit) dari sebuah gambar untuk perbandingan kemiripan.
+     */
+    private function getImageHash(string $absolutePath): ?string
+    {
+        if (!is_file($absolutePath)) {
+            return null;
+        }
+
+        $info = @getimagesize($absolutePath);
+        if (!$info) {
+            return null;
+        }
+
+        $image = match ($info[2]) {
+            IMAGETYPE_JPEG => @imagecreatefromjpeg($absolutePath),
+            IMAGETYPE_PNG => @imagecreatefrompng($absolutePath),
+            IMAGETYPE_GIF => @imagecreatefromgif($absolutePath),
+            IMAGETYPE_WEBP => function_exists('imagecreatefromwebp') ? @imagecreatefromwebp($absolutePath) : null,
+            default => null,
+        };
+
+        if (!$image) {
+            return null;
+        }
+
+        $size = 8;
+        $resized = imagecreatetruecolor($size, $size);
+        imagecopyresampled($resized, $image, 0, 0, 0, 0, $size, $size, imagesx($image), imagesy($image));
+        imagefilter($resized, IMG_FILTER_GRAYSCALE);
+
+        $pixels = [];
+        $total = 0;
+        for ($y = 0; $y < $size; $y++) {
+            for ($x = 0; $x < $size; $x++) {
+                $gray = imagecolorat($resized, $x, $y) & 0xFF;
+                $pixels[] = $gray;
+                $total += $gray;
+            }
+        }
+
+        imagedestroy($image);
+        imagedestroy($resized);
+
+        $average = $total / count($pixels);
+
+        $hash = '';
+        foreach ($pixels as $pixel) {
+            $hash .= $pixel >= $average ? '1' : '0';
+        }
+
+        return $hash;
+    }
+
+    private function hammingDistance(string $hash1, string $hash2): int
+    {
+        if (strlen($hash1) !== strlen($hash2)) {
+            return PHP_INT_MAX;
+        }
+
+        $distance = 0;
+        for ($i = 0, $len = strlen($hash1); $i < $len; $i++) {
+            if ($hash1[$i] !== $hash2[$i]) {
+                $distance++;
+            }
+        }
+
+        return $distance;
     }
 
     // ========== Authorization Helpers ==========
